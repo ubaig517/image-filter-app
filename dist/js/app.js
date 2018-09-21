@@ -1,5 +1,5 @@
 const canvas = document.getElementById('canvas');
-const contxt = canvas.getContext('2d');
+const ctx = canvas.getContext('2d');
 
 let img = new Image();
 let fileName = '';
@@ -61,8 +61,35 @@ document.addEventListener('click', (e) =>{
       Caman('#canvas', img, function(){
         this.clarity().render();
       });
+    } else if(e.target.classList.contains('sincity-add')) {
+      Caman('#canvas', img, function(){
+        this.sinCity().render();
+      });
+    } else if(e.target.classList.contains('crossprocess-add')) {
+      Caman('#canvas', img, function(){
+        this.crossProcess().render();
+      });
+    } else if(e.target.classList.contains('pinhole-add')) {
+      Caman('#canvas', img, function(){
+        this.pinhole().render();
+      });
+    } else if(e.target.classList.contains('nostalgia-add')) {
+      Caman('#canvas', img, function(){
+        this.nostalgia().render();
+      });
+    } else if(e.target.classList.contains('hermajesty-add')) {
+      Caman('#canvas', img, function(){
+        this.herMajesty().render();
+      }); ``
     }
   }
+});
+
+// Reset Filters & Effects
+resetBtn.addEventListener('click', () => {
+  Caman('#canvas', img, function() {
+    this.revert();
+  });
 });
 
 // Upload File
@@ -70,7 +97,7 @@ uploadFile.addEventListener('change', (e) => {
   // Get File
   const file = document.getElementById('upload-file').files[0];
 
-  // Init FIleREader
+  // Init FileREader
   const reader = new FileReader();
 
   if(file) {
@@ -90,8 +117,40 @@ uploadFile.addEventListener('change', (e) => {
     img.onload = function () {
       canvas.width = img.width;
       canvas.height = img.height;
-      contxt.drawImage(img, 0, 0, img.width, img.height);
+      ctx.drawImage(img, 0, 0, img.width, img.height);
       canvas.removeAttribute('data-caman-id');
     }
   }, false);
 });
+
+// Download Event
+downloadBtn.addEventListener('click', (e) => {
+  // Get file ext
+  const fileExtension = fileName.slice(-4);
+
+  // Init new fileName
+  let newFileName;
+
+  // Check image type
+  if(fileExtension === '.jpg' || fileExtension === '.png') {
+    newFileName = fileName.substring(0, fileName.length - 4) + '-edited.jpg';
+  }
+
+  // Call download
+  download(canvas, newFileName);
+});
+
+// Download function
+function download(canvas, filename) {
+  //init event
+  let e;
+  // Create Link
+  const link = document.createElement('a');
+  //set props
+  link.download = fileName;
+  link.href = canvas.toDataURL('image/jpeg', 0.8);
+  // New mouse Event
+  e = new MouseEvent('click');
+  //Dispatch event
+  link.dispatchEvent(e);
+}
